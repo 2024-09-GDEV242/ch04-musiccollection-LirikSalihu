@@ -4,8 +4,8 @@ import java.util.ArrayList;
  * A class to hold details of audio tracks.
  * Individual tracks may be played.
  * 
- * @author David J. Barnes and Michael Kölling
- * @version 2016.02.29
+ * @author Lirik Salihu
+ * @version 2024.10.07
  */
 public class MusicOrganizer
 {
@@ -87,8 +87,8 @@ public class MusicOrganizer
     {
         System.out.println("Track listing: ");
 
-        for(Track track : tracks) {
-            System.out.println(track.getDetails());
+        for (int i = 0; i < tracks.size(); i++) { 
+            System.out.println("Track " + (i + 1) + ": " + tracks.get(i).getDetails());
         }
         System.out.println();
     }
@@ -99,10 +99,15 @@ public class MusicOrganizer
      */
     public void listByArtist(String artist)
     {
+        boolean found = false;
         for(Track track : tracks) {
-            if(track.getArtist().contains(artist)) {
+            if (track.getArtist().toLowerCase().contains(artist.toLowerCase())) {
                 System.out.println(track.getDetails());
+                found = true; 
             }
+        }
+        if (!found) {
+            System.out.println("No tracks found by artist: " + artist);
         }
     }
     
@@ -112,8 +117,9 @@ public class MusicOrganizer
      */
     public void removeTrack(int index)
     {
-        if(indexValid(index)) {
+        if (indexValid(index)) {
             tracks.remove(index);
+            System.out.println("Track removed successfully.");
         }
     }
     
@@ -122,8 +128,11 @@ public class MusicOrganizer
      */
     public void playFirst()
     {
-        if(tracks.size() > 0) {
+        if (!tracks.isEmpty()) {
             player.startPlaying(tracks.get(0).getFilename());
+            System.out.println("Now playing: " + tracks.get(0).getArtist() + " - " + tracks.get(0).getTitle());
+        } else {
+            System.out.println("No tracks available to play.");
         }
     }
     
@@ -133,6 +142,7 @@ public class MusicOrganizer
     public void stopPlaying()
     {
         player.stop();
+        System.out.println("Player stopped.");
     }
 
     /**
@@ -166,7 +176,7 @@ public class MusicOrganizer
         ArrayList<Track> tempTracks = reader.readTracks(folderName, ".mp3");
 
         // Put all thetracks into the organizer.
-        for(Track track : tempTracks) {
+        for (Track track : tempTracks) {
             addTrack(track);
         }
     }
